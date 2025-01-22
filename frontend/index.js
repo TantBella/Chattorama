@@ -1,12 +1,37 @@
-function sendMessage() {
-  const input = document.getElementById("chatMessage").value;
+const messageDiv = document.getElementById("messages");
+const messageInput = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
 
-  if (input.trim() === "") {
+async function loadMessages() {
+  try {
+    const response = await fetch(
+      "https://cloud24chat.azurewebsites.net/api/messages"
+    );
+    const messages = await response.json();
+
+    messageDiv.innerHTML = "";
+
+    messages.forEach((msg) => {
+      const messageElement = document.createElement("div");
+      messageElement.textContent = `${msg.text}`;
+      messageDiv.appendChild(messageElement);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+loadMessages();
+
+function sendMessage() {
+  const input = messageInput.value.trim();
+
+  if (input === "") {
     alert("Meddelandet kan inte vara tomt!");
     return;
   }
 
-  fetch("http://localhost:3000/api/messages", {
+  fetch("https://cloud24chat.azurewebsites.net/api/message", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -16,11 +41,13 @@ function sendMessage() {
     .then((response) => response.json())
     .then((data) => {
       console.log("Meddelande skickat:", data);
-      document.getElementById("chatmessages").innerText = data.text;
+
+      const messageElement = document.createElement("div");
+      messageElement.textContent = `${data.text}`;
+      messageDiv.appendChild(messageElement);
     })
     .catch((error) => {
       console.error("Fel vid skickande av meddelande:", error);
     });
-
-  document.getElementById("chatMessage").value = "";
+  messageInput.value = "";
 }
