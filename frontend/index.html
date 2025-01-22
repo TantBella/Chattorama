@@ -8,13 +8,10 @@
   <body>
     <h1>Chattorama</h1>
     <p>Snacka med din kompis</p>
-    <input
-      type="text"
-      name=""
-      placeholder="Skriv meddelande"
-      id="chatMessage"
-    />
-    <input type="button" value="Skicka meddelande" />
-    <script src="server.js"></script>
+    <input type="text" placeholder="Skriv meddelande" id="chatMessage" />
+    <button type="button" onclick="sendMessage()">Skicka meddelande</button>
+    <span id="chatmessages"></span>
+
+    <script src="index.js"></script>
   </body>
 </html>

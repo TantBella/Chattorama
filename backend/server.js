@@ -1,8 +1,8 @@
-// require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
-const cors = require("cors");
 
 app.use(express.json());
 app.use(cors());
@@ -12,13 +12,13 @@ let currentId = 1;
 
 app.get("/api/messages", (req, res) => {
   res.json(messages);
-  console.log("Welcome to my chat");
 });
 
 app.post("/api/messages", (req, res) => {
   const { text } = req.body;
+
   if (!text) {
-    return res.status(400);
+    return res.status(400).json({ error: "Meddelandet kan inte vara tomt" });
   }
 
   const newMessage = {
@@ -26,10 +26,11 @@ app.post("/api/messages", (req, res) => {
     text,
     createdAt: new Date(),
   };
+
   messages.push(newMessage);
-  res.status(200).json(newMessage);
+  res.status(201).json(newMessage);
 });
 
 app.listen(PORT, () => {
-  console.log(`listening to PORT ${PORT}`);
+  console.log(`Servern körs på port ${PORT}`);
 });
